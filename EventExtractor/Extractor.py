@@ -5,7 +5,6 @@ Created on 23-Mar-2016
 '''
 
 import json
-
 from article import Article
 from nltk.tag import StanfordNERTagger
 from nltk.tokenize import sent_tokenize
@@ -23,9 +22,7 @@ def NamedEntityRecognizer(sent_tokenize_list):
 	'''
 	Set the path to whereever the stanford-ner package is.
 	'''
-	st = StanfordNERTagger('/home/haripriya/AI/eventExtraction/stanford-ner-2015-12-09/classifiers/english.muc.7class.distsim.crf.ser.gz',
-					   '/home/haripriya/AI/eventExtraction/stanford-ner-2015-12-09/stanford-ner-3.6.0.jar',
-					   encoding='utf-8')
+	st = StanfordNERTagger('../stanford-ner/english.muc.7class.distsim.crf.ser.gz','../stanford-ner/stanford-ner.jar'	,encoding='utf-8')
 	classified_article = []
 	for sent in sent_tokenize_list:
 		#tokenized_text = word_tokenize(sent)
