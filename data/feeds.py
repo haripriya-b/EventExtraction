@@ -5,27 +5,33 @@ from bs4 import BeautifulSoup
 from stripogram import html2text
 from newspaper import Article
 import time
-soup = BeautifulSoup(open("feedsList.html"), 'html.parser')
+#soup = BeautifulSoup(open("feedsList.html"), 'html.parser')
 
-feedsList = []
-for a in soup.find_all('a', href=True):
-    feedsList.append(a['href'])
+#feedsList = []
+#for a in soup.find_all('a', href=True):
+#    feedsList.append(a['href'])
 
-feedsList = feedsList[13:]
+#feedsList = feedsList[13:]
 #print(feedsList[100])
 
 businessFeeds = []
-for link in feedsList:
-	if "business" in link.lower() and "business-standard.com" not in link.lower():
-		businessFeeds.append(link)
-		print(link + "\n")
+#for link in feedsList:
+#	if "business" in link.lower() and "business-standard.com" not in link.lower():
+#		businessFeeds.append(link)
+#		print(link + "\n")
 		
+
+companies = ['Amazon', 'Android', 'AOL', 'Apple', 'Facebook', 'Google', 'Groupon', 'ipad', 'iphone', 'LinkedIn', 'Microsoft'
+                'Samsung', 'Square', 'Twitter', 'Yahoo', 'Zynga']
 
 businessFeeds.append('http://feeds.reuters.com/reuters/INbusinessNews')				
 #subset = feedsList[333:666]
 subset = businessFeeds
 subset =['http://feeds.reuters.com/reuters/INbusinessNews'] 
 subset.append('http://feeds.feedburner.com/TechCrunchIT')
+baseURL = 'http://feeds.feedburner.com/TechCrunch/'
+for company in companies:
+    subset.append(baseURL+company)
 #subset = ['http://feeds.feedburner.com/TechCrunchIT']
 print businessFeeds
 date1 = time.strftime("%x")
