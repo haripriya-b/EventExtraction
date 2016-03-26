@@ -82,7 +82,7 @@ def getArticle(fileName):
 		data = json.loads(line)
 		article = data[0]
 		 
-		return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), preprocessData(article["desciption"]), article["articleId"])
+		return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), '''preprocessData(article["desciption"]),'''" ", article["articleId"])
 	else:
 		return ''
 	
@@ -102,13 +102,20 @@ def main():
 		article = getArticle(dataFile)
 		if article == '' : break
 		text = article.getText()
+		title = article.getTitle()
+		title_sent_list = splitToSentences(text)
 		sent_list = splitToSentences(text)
+		title_class_article = NamedEntityRecognizer(title_sent_list)
 		class_article = NamedEntityRecognizer(sent_list)
 		print (class_article)
 		pos_tagged = PosTagger(sent_list)
+		pos_tagged_title = PosTagger(title_sent_list)
 		print (pos_tagged)
 		ne_tree = getMultiWordEntityTree(class_article)
+		title_ne_tree = getMultiWordEntityTree(class_article)
+		print(title_ne_tree)
+		print "tree for title"
 		print(ne_tree)
-
+			
 main()	
 #getArticle("data/test.txt")
