@@ -6,13 +6,14 @@ Created on 23-Mar-2016
 
 import json
 from article import Article
+
 from nltk.tag import StanfordNERTagger
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 from nltk.chunk import conlltags2tree
 from nltk.tree import Tree
-
+import nltk
 
 def splitToSentences(article):
 	 sent_tokenize_list = sent_tokenize(article)
@@ -92,7 +93,31 @@ def preprocessData(text):
 	for ch in addSpaceTo:
 		text = text.replace(ch, ' '+ch)
 	return text
-	
+
+def parseTree(tree):
+	count = {}
+	entities= ['LOCATION','PERSON','ORGANIZATION','DATE','MONEY']
+	for entity in entities:
+		count[entity] = {}
+		
+	for child in tree:
+			if (type(child)==nltk.tree.Tree):
+				if child.label() in entities:
+					s = ""
+					for c in child:
+						s=s+" " + c[0]
+					if s in count[child.label()].keys():
+						
+						count[child.label()][s] +=1 
+					else:
+						
+						count[child.label()][s] =1
+			#else:
+				
+	print count			
+				
+				#print child[1]
+		
 def main():
 	'''
 	Set the correct path of the data file
@@ -103,7 +128,10 @@ def main():
 		if article == '' : break
 		text = article.getText()
 		title = article.getTitle()
-		title_sent_list = splitToSentences(text)
+		print title
+		
+		title_sent_list = splitToSentences(title)
+		#print title_sent_list
 		sent_list = splitToSentences(text)
 		title_class_article = NamedEntityRecognizer(title_sent_list)
 		class_article = NamedEntityRecognizer(sent_list)
@@ -111,11 +139,21 @@ def main():
 		pos_tagged = PosTagger(sent_list)
 		pos_tagged_title = PosTagger(title_sent_list)
 		print (pos_tagged)
+		#print(pos_tagged_title)
 		ne_tree = getMultiWordEntityTree(class_article)
-		title_ne_tree = getMultiWordEntityTree(class_article)
-		print(title_ne_tree)
-		print "tree for title"
-		print(ne_tree)
-			
+		title_ne_tree = getMultiWordEntityTree(title_class_article)
+		#print(ne_tree)
+		#print "tree for title"
+		#print(ne_tree)
+		ne_tree.draw()	
+		print type(ne_tree)
+		#print len(title_ne_tree)
+		parseTree(ne_tree)
+		
+	#print i
+	#print title_ne_tree.label()
+	labelCount = {}
+	
+	#print labelCount
 main()	
 #getArticle("data/test.txt")
