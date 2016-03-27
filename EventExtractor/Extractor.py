@@ -3,10 +3,12 @@ Created on 23-Mar-2016
 
 @author: haripriya
 '''
-
+from __future__ import division
 import json
+import csv
+import re
 from article import Article
-
+from entity import Entity
 from nltk.tag import StanfordNERTagger
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
@@ -86,7 +88,30 @@ def getArticle(fileName):
 		return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), '''preprocessData(article["desciption"]),'''" ", article["articleId"])
 	else:
 		return ''
-	
+def mean_occurence(a_str, sub):
+	length = len(a_str)
+	count = 0
+	start = 0
+	final = 0
+	while(True):
+		temp= a_str.find(sub)
+		if temp == -1:
+			if(count >0):
+				final = start/count
+				return final/length
+			else:
+				return 0
+		else:
+			count+=1
+			start = start + temp
+			a_str = a_str[start+len(sub):]
+			
+#     p = [m.start() for m in re.finditer(sub, a_str)]
+#     if len(p)>0:	
+#     	return sum(p)/len(p)
+#     else: 
+#     	return 0
+        	
 def preprocessData(text):
 	addSpaceTo = [":", ",", ";", "\'"]
 	temp = ""
@@ -96,6 +121,7 @@ def preprocessData(text):
 
 def parseTree(tree):
 	count = {}
+	tupelist = []
 	entities= ['LOCATION','PERSON','ORGANIZATION','DATE','MONEY']
 	for entity in entities:
 		count[entity] = {}
@@ -106,6 +132,7 @@ def parseTree(tree):
 					s = ""
 					for c in child:
 						s=s+" " + c[0]
+					tupelist.append((child.label(),s))
 					if s in count[child.label()].keys():
 						
 						count[child.label()][s] +=1 
@@ -114,7 +141,8 @@ def parseTree(tree):
 						count[child.label()][s] =1
 			#else:
 				
-	print count			
+	#print(tupelist)
+	return count,tupelist			
 				
 				#print child[1]
 		
@@ -122,13 +150,17 @@ def main():
 	'''
 	Set the correct path of the data file
 	'''
-	dataFile = open("../data/test.txt")
+	dataFile = open("../data/march26_final.txt")
+	who_train = open('who_train.csv','w')
+	writer = csv.DictWriter(open('who_train.csv','w'), fieldnames = ["articleId","who", "num_occur_text", "num_occur_title","distribution","entity_type"])
+	writer.writeheader()
 	while (True):
 		article = getArticle(dataFile)
 		if article == '' : break
+		print("articleId ", article.getArticleId())
 		text = article.getText()
 		title = article.getTitle()
-		print title
+		print(title)
 		
 		title_sent_list = splitToSentences(title)
 		#print title_sent_list
@@ -145,14 +177,33 @@ def main():
 		#print(ne_tree)
 		#print "tree for title"
 		#print(ne_tree)
-		ne_tree.draw()	
-		print type(ne_tree)
+		#ne_tree.draw()	
+		print(type(ne_tree))
 		#print len(title_ne_tree)
-		parseTree(ne_tree)
-		
+		text_count,tuplelist = parseTree(ne_tree)
+		title_count,title_tuples = parseTree(title_ne_tree)
+		print(text_count)
+		print(tuplelist)
+		for key in ['PERSON','LOCATION','ORGANIZATION']:
+			#row={}
+			for akey in text_count[key].keys():
+				row = {}
+				row["articleId"]=article.getArticleId()
+				row["who"]=akey
+				row["num_occur_text"] = text_count[key][akey]
+				row["entity_type"] = key
+				row["distribution"] = mean_occurence(text,akey)
+				print("mean occurence",mean_occurence(text,akey))
+				if akey in title_count[key].keys():
+					row["num_occur_title"] = title_count[key][akey]
+				else:
+					row["num_occur_title"] = 0	
+				writer.writerow(row)
+				print(row)
+						
 	#print i
 	#print title_ne_tree.label()
-	labelCount = {}
+	#labelCount = {}
 	
 	#print labelCount
 main()	
