@@ -8,7 +8,6 @@ import json
 import csv
 import re
 from article import Article
-from entity import Entity
 from nltk.tag import StanfordNERTagger
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
@@ -16,6 +15,7 @@ from nltk import pos_tag
 from nltk.chunk import conlltags2tree
 from nltk.tree import Tree
 import nltk
+import corefResolution
 
 def splitToSentences(article):
 	 sent_tokenize_list = sent_tokenize(article)
@@ -145,7 +145,75 @@ def parseTree(tree):
 	return count,tupelist			
 				
 				#print child[1]
+				
+def main(inputFile):
+	articles = corefResolution.generate_entities(inputFile, "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "text")
+	csv_reader = csv.DictReader(open('who_train.csv','r'))
+	entities_in_article_text = {}
+	for row in csv_reader:
+		if row["articleId"] not in entities_in_article_text.keys():
+			entities_in_article_text[row["articleId"]] = {row["who"]: [row["num_occur_text"], row["num_occur_title"], row["distribution"], row["entity_type"]]}
+		else:
+			entities_in_article_text[row["articleId"]][row["who"]] = [row["num_occur_text"], row["num_occur_title"], row["distribution"], row["entity_type"]] 
+	print (entities_in_article_text)
+	
+	dummy = open("who_train.csv","w")
+	dummy.close()
+	
+	
+	articles = corefResolution.generate_entities(inputFile, "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "title") 
+	csv_reader = csv.DictReader(open('who_train.csv','r'))
+	entities_in_article_title = {}
+	for row in csv_reader:
+		if row["articleId"] not in entities_in_article_title.keys():
+			entities_in_article_title[row["articleId"]] = {row["who"]: [row["num_occur_text"], row["num_occur_title"], row["distribution"], row["entity_type"]]}
+		else:
+			entities_in_article_title[row["articleId"]][row["who"]] = [row["num_occur_text"], row["num_occur_title"], row["distribution"], row["entity_type"]] 
+	print (entities_in_article_title)
+	
+	dummy = open("who_train.csv","w")
+	dummy.close()
+	
+	
+	'''
+	Merge text and title entities
+	'''
+	
+	writer = csv.DictWriter(open('who_train.csv','a'), fieldnames = ["articleId","who", "num_occur_text", "num_occur_title","distribution","entity_type"])
+	writer.writeheader()
+
+	for id in entities_in_article_title.keys():
+		for who in entities_in_article_title[id].keys():
+			if who in entities_in_article_text[id].keys():
+					entities_in_article_text[id][who][1] =int(entities_in_article_title[id][who][1]) + 1
+			else:
+				 entities_in_article_text[id][who] = entities_in_article_title[id][who]
+			
+	for id in entities_in_article_text.keys():
+		for who in entities_in_article_text[id].keys():		
+			row = {"articleId":id, "who":who, "num_occur_text": entities_in_article_text[id][who][0], "num_occur_title": entities_in_article_text[id][who][1], "distribution": entities_in_article_text[id][who][2], "entity_type": entities_in_article_text[id][who][3]}
+			writer.writerow(row)
+        
+	
+	
+	'''
+	
+	for article in articles:
+		title = article.getTitle()
+		title_sent_list = splitToSentences(title)
+		pos_tagged_title = PosTagger(title_sent_list)			
+		title_class_article = NamedEntityRecognizer(title_sent_list)
+		print(title_class_article)
 		
+		title_ne_tree = getMultiWordEntityTree(title_class_article)
+		print(title_ne_tree)
+		title_ne_tree.draw()
+		'''
+		
+main("../data/test.txt")				
+#main("../data/march26_final.txt")
+
+"""		
 def main():
 	'''
 	Set the correct path of the data file
@@ -208,3 +276,4 @@ def main():
 	#print labelCount
 main()	
 #getArticle("data/test.txt")
+"""
