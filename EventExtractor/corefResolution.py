@@ -47,8 +47,9 @@ def create_title_input(inputFile):
 
 def corefRes(inputFilesPath, core_nlp_path):
 
-    os.system("cort-predict-raw -in " + inputFilesPath + " -model ../data/model-pair-train.obj -extractor cort.coreference.approaches.mention_ranking.extract_substructures -perceptron cort.coreference.approaches.mention_ranking.RankingPerceptron -clusterer cort.coreference.clusterer.all_ante -corenlp " + core_nlp_path + " -suffix out")
+    pos = os.system("cort-predict-raw -in " + inputFilesPath + " -model ../data/model-pair-train.obj -extractor cort.coreference.approaches.mention_ranking.extract_substructures -perceptron cort.coreference.approaches.mention_ranking.RankingPerceptron -clusterer cort.coreference.clusterer.all_ante -corenlp " + core_nlp_path + " -suffix out")
 
+    print("POS is" , pos)
 '''
     subprocess.call([
             "cort-predict-raw",
