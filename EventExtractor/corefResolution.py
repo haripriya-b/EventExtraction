@@ -45,11 +45,13 @@ def create_title_input(inputFile):
             
     return articles
 
-def corefRes(inputFilesPath, core_nlp_path):
+def corefRes(inputFilesPath, core_nlp_path, part_of_article):
 
-    pos = os.system("cort-predict-raw -in " + inputFilesPath + " -model ../data/model-pair-train.obj -extractor cort.coreference.approaches.mention_ranking.extract_substructures -perceptron cort.coreference.approaches.mention_ranking.RankingPerceptron -clusterer cort.coreference.clusterer.all_ante -corenlp " + core_nlp_path + " -suffix out")
+    os.system("cort-predict-raw -in " + inputFilesPath + " -model ../data/model-pair-train.obj " +
+              "-extractor cort.coreference.approaches.mention_ranking.extract_substructures -perceptron " + 
+              "cort.coreference.approaches.mention_ranking.RankingPerceptron -clusterer cort.coreference.clusterer.all_ante " + 
+              "-corenlp " + core_nlp_path + " -suffix out > ../data/articles/" + part_of_article + "/requiredData.dat")
 
-    print("POS is" , pos)
 '''
     subprocess.call([
             "cort-predict-raw",
@@ -65,5 +67,5 @@ def corefRes(inputFilesPath, core_nlp_path):
     
 def generate_entities(inputFile, core_nlp_path, part_of_article):    
     articles = create_title_input(inputFile) #"../data/test.txt")
-    corefRes("../data/articles/" + part_of_article + "/*.txt", core_nlp_path) #"/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09")
+    corefRes("../data/articles/" + part_of_article + "/*.txt", core_nlp_path, part_of_article) #"/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09")
     return articles
