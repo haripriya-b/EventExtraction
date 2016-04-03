@@ -8,8 +8,8 @@ def getWhat(whoAll,title):
 	
 	for i in whoAll:
 	   if i.find(" ") > 0:
-			 whoAll.remove(i)
-			 whoAll = whoAll + i.split(" ")
+	   		whoAll.remove(i)
+	   		whoAll = whoAll + i.split(" ")
 	
 	#print whoAll
 	for who in whoAll:
