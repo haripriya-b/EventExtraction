@@ -6,7 +6,7 @@ Created on 23-Mar-2016
 
 class Article:
     
-    def __init__(self, title, url, text, description, articleId, sentences, sent_in_title):
+    def __init__(self, title, url, text, description, articleId, sentences, sent_in_title, date):
         self.title = title
         self.url = url
         self.text = text
@@ -15,6 +15,7 @@ class Article:
         self.sent_in_title = sent_in_title
         self.sentences = sentences
         self.parseTree = ''
+        self.date = date
         
         
     def __hash__(self):
