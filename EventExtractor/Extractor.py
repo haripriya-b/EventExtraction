@@ -1,11 +1,12 @@
 import corefResolution
 from guess_who import getWho
 from guess_what import get_who_and_what
+from FeatureExtractor import generate_entity_features
 
 def Extractor(inputFile):
     articles = corefResolution.create_title_input(inputFile)
-    
-    who_and_prob = getWho(inputFile)
+    entities_in_article = generate_entity_features()
+    who_and_prob = getWho(inputFile, entities_in_article)
     who = []
     for (ent, prb) in who_and_prob:
         who.append(ent)

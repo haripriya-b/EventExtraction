@@ -4,11 +4,10 @@ import corefResolution
 import csv
 from FeatureExtractor import generate_entity_features
 
-def getWho(inputFile):
+def getWho(inputFile, entities_in_article):
     file = open("../data/my_who_classifier.pkl", "rb")
     gnb_classifier = pickle.load(file)
     #inputFile = "../data/test.txt"
-    entities_in_article = generate_entity_features()
     whoList = []
     for id in entities_in_article.keys():
         for who in entities_in_article[id].keys():
