@@ -21,8 +21,8 @@ class Article:
         return hash(self.articleId)
     
     def __eq__(self, other):
-        return self.articleId == other.articleId()
-    
+        return self.articleId == other.articleId
+'''    
     def getTitle(self):
         return self.title
         
@@ -37,4 +37,4 @@ class Article:
         
     def getArticleId(self):
         return self.articleId
-
+'''

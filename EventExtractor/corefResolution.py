@@ -18,9 +18,9 @@ def getArticle(fileName):
         sentences = sent_tokenize(preprocessData(article["text"]))
         sent_in_title = sent_tokenize(preprocessData(article["title"]))
         return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), 
-                       article["articleId"],"", sentences, sent_in_title)
+                       "", article["articleId"], sentences, sent_in_title)
     else:
-        return Artilce("","","","",[],[])
+        return Article(None, None, None, None, None, None, None)
     
 def preprocessData(text):
     addSpaceTo = [":", ",", ";", "\'"]
@@ -31,22 +31,20 @@ def preprocessData(text):
     
 def create_text_input(inputFile):
     articles = {}
-    dataFile = open(inputFile)
+    dataFile = open(inputFile, "r")
     while True:
         article = getArticle(dataFile)
-        if article.articleId == '' : break
-        with open("../data/articles/text/" + str(article.getArticleId()) + ".txt", "w") as articleFile:
-            articleFile.write(article.getText())
-        articles[article.articleId()] = article
-        #articles[article.articleId()] = {"articleId":article.getArticleId, "title": article.title(), "url": article.url(),
-        #                                 "text": article.text(), "sent_in_title": article.sent_in_title(), }
+        if article.articleId == None : break
+        with open("../data/articles/text/" + str(article.articleId) + ".txt", "w") as articleFile:
+            articleFile.write(article.text)
+        articles[article.articleId] = article
     return articles
 
 def create_title_input(inputFile):
     articles = create_text_input(inputFile)
-    for article in articles:
-        with open("../data/articles/title/" + str(article.getArticleId()) + ".txt", "w") as articleFile:
-            articleFile.write(article.getTitle())
+    for articleId in articles.keys():
+        with open("../data/articles/title/" + str(articles[articleId].articleId) + ".txt", "w") as articleFile:
+            articleFile.write(articles[articleId].title)
             
     return articles
 
