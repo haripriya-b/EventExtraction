@@ -7,6 +7,7 @@ import os
 
 from article import Article
 from stanford_corenlp_pywrapper.sockwrap import CoreNLP
+from nltk.tokenize import sent_tokenize
 
 
 def getArticle(fileName):
@@ -14,8 +15,10 @@ def getArticle(fileName):
     if line != '':
         data = json.loads(line)
         article = data[0]
-         
-        return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), '''preprocessData(article["desciption"]),'''" ", article["articleId"])
+        sentences = sent_tokenize(preprocessData(article[:text]))
+        sent_in_title = sent_tokenize(preprocessData(article[title]))
+        return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), 
+                       article["articleId"], sentences, sent_in_title)
     else:
         return ''
     
@@ -27,14 +30,14 @@ def preprocessData(text):
     return text
     
 def create_text_input(inputFile):
-    articles = []
+    articles = {}
     dataFile = open(inputFile)
     while True:
         article = getArticle(dataFile)
         if article == '' : break
         with open("../data/articles/text/" + str(article.getArticleId()) + ".txt", "w") as articleFile:
             articleFile.write(article.getText())
-        articles.append(article)
+        articles[article.articleId()] = article
     return articles
 
 def create_title_input(inputFile):
