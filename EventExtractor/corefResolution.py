@@ -15,12 +15,12 @@ def getArticle(fileName):
     if line != '':
         data = json.loads(line)
         article = data[0]
-        sentences = sent_tokenize(preprocessData(article[:text]))
-        sent_in_title = sent_tokenize(preprocessData(article[title]))
+        sentences = sent_tokenize(preprocessData(article["text"]))
+        sent_in_title = sent_tokenize(preprocessData(article["title"]))
         return Article(preprocessData(article["title"]), article["url"], preprocessData(article["text"]), 
-                       article["articleId"], sentences, sent_in_title)
+                       article["articleId"],"", sentences, sent_in_title)
     else:
-        return ''
+        return Artilce("","","","",[],[])
     
 def preprocessData(text):
     addSpaceTo = [":", ",", ";", "\'"]
@@ -34,10 +34,12 @@ def create_text_input(inputFile):
     dataFile = open(inputFile)
     while True:
         article = getArticle(dataFile)
-        if article == '' : break
+        if article.articleId == '' : break
         with open("../data/articles/text/" + str(article.getArticleId()) + ".txt", "w") as articleFile:
             articleFile.write(article.getText())
         articles[article.articleId()] = article
+        #articles[article.articleId()] = {"articleId":article.getArticleId, "title": article.title(), "url": article.url(),
+        #                                 "text": article.text(), "sent_in_title": article.sent_in_title(), }
     return articles
 
 def create_title_input(inputFile):

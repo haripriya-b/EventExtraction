@@ -16,6 +16,13 @@ class Article:
         self.sentences = sentences
         self.parseTree = ''
         
+        
+    def __hash__(self):
+        return hash(self.articleId)
+    
+    def __eq__(self, other):
+        return self.articleId == other.articleId()
+    
     def getTitle(self):
         return self.title
         
