@@ -1,0 +1,28 @@
+LOAD CSV WITH HEADERS FROM "file:///home/haripriya/AI/Project/companies.csv" AS csvLine
+CREATE (c:Company { id: toInt(csvLine.ID), name: csvLine.Company, sector: csvLine.Sector })
+
+2. CREATE CONSTRAINT ON (company:Company) ASSERT company.id IS UNIQUE
+
+
+3. USING PERIODIC COMMIT 500
+LOAD CSV WITH HEADERS FROM "file:///home/haripriya/AI/Project/competitors.csv" AS csvLine
+MATCH (company1:Company { name: csvLine.Company1}),(company2:Company { name: csvLine.Company2})
+CREATE (company1)-[:COMPETITOR]->(company2)
+
+4. DROP CONSTRAINT ON (company:Company) ASSERT company.id IS UNIQUE
+
+5. start r=relationship(*) 
+match s-[r]-e 
+with s,e,type(r) as typ, tail(collect(r)) as coll 
+foreach(x in coll | delete x)
+
+MATCH (m:Company{name :"AOL"})-[:COMPETITOR]->(h:Company) RETURN h LIMIT 20
+
+
+LOAD CSV WITH HEADERS FROM "file:///home/haripriya/AI/Project/companyType.csv" AS csvLine
+CREATE (c:Field { id: csvLine.FieldID, sector: csvLine.Field })
+
+//edges
+LOAD CSV WITH HEADERS FROM "file:///home/haripriya/AI/Project/edges.csv" AS csvLine
+MATCH (company:Company { name: csvLine.Company}),(field:Field { sector: csvLine.Field})
+CREATE (company)-[:WORKS_IN]->(field)

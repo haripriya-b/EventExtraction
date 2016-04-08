@@ -147,7 +147,7 @@ def parseTree(tree):
 				#print child[1]
 				
 def main(inputFile):
-	articles = corefResolution.generate_entities(inputFile, "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "text")
+	articles = corefResolution.generate_entities(inputFile, "/home/prerit/ai/project/stanford-corenlp-full-2015-12-09", "text")
 	csv_reader = csv.DictReader(open('who_train.csv','r'))
 	entities_in_article_text = {}
 	for row in csv_reader:
@@ -161,7 +161,7 @@ def main(inputFile):
 	dummy.close()
 	
 	
-	articles = corefResolution.generate_entities(inputFile, "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "title") 
+	articles = corefResolution.generate_entities(inputFile, "/home/prerit/ai/project/stanford-corenlp-full-2015-12-09", "title") 
 	csv_reader = csv.DictReader(open('who_train.csv','r'))
 	entities_in_article_title = {}
 	for row in csv_reader:
@@ -181,6 +181,8 @@ def main(inputFile):
 	
 	writer = csv.DictWriter(open('who_train.csv','a'), fieldnames = ["articleId","who", "num_occur_text", "num_occur_title","distribution","entity_type"])
 	writer.writeheader()
+	where_writer = csv.DictWriter(open('where_train.csv','a'), fieldnames = ["articleId","who", "num_occur_text", "num_occur_title","distribution","entity_type"])
+	where_writer.writeheader()
 
 	for id in entities_in_article_title.keys():
 		for who in entities_in_article_title[id].keys():
