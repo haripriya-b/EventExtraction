@@ -104,7 +104,9 @@ def get_who_and_what(who):
 	if len(who_n_what_title) == 0:
 		who_n_what_text = getWhat(who,textTree)
 	#	print ("text: ", who_n_what_text)
-		return who_n_what_text[0]
+		if len(who_n_what_text) > 0:
+			return who_n_what_text[0]
+		else: return "  "
 	else:
 	#	print("title: ", who_n_what_title)
 		return who_n_what_title[0]

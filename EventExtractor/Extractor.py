@@ -22,9 +22,11 @@ def Extractor(inputFile):
     when = getWhen(entities_in_article,articles,who_n_what[0])
     print("when: ",when)
     where = getWhere(inputFile, entities_in_article)
+    print('where: ', where)
     for articleID in articles.keys():
     	publicationDate = articles[articleID].date
-    event1 = Event(who_n_what[0], who_n_what[1], where[0], when, "", "", publicationDate)
+    	link = articles[articleID].url
+    event1 = Event(who_n_what[0], who_n_what[1], where[0], when, "", "", publicationDate,link)
     return event1
    
    
