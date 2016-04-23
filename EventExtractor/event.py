@@ -1,7 +1,8 @@
 class Event:
   
 
-    def __init__(self,  who, what, where, when, why, organization, publicationDate,link):
+    def __init__(self, id, who, what, where, when, why, organization, publicationDate,link):
+        self.id = id
         self.who = who
         self.what = what
         self.where = where
