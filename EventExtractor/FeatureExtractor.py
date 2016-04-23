@@ -14,8 +14,8 @@ and their distribution.
  
 '''
 def generate_entity_features():
-	corefResolution.corefRes("../data/articles/text/*.txt", "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "text")
-	csv_reader = csv.DictReader(open('train.csv','r'))
+	corefResolution.corefRes("../data/articles/text/*.txt", "/home/prerit/ai/project/stanford-corenlp-full-2015-12-09", "text")
+	csv_reader = csv.DictReader(open('../data/train.csv','r'))
 	entities_in_article_text = {}
 	for row in csv_reader:
 		if row["articleId"] not in entities_in_article_text.keys():
@@ -24,12 +24,12 @@ def generate_entity_features():
 			entities_in_article_text[row["articleId"]][row["who"]] = [row["num_occur_text"], row["num_occur_title"], row["distribution"], row["entity_type"]] 
 	#print (entities_in_article_text)
 	
-	dummy = open("train.csv","w")
+	dummy = open("../data/train.csv","w")
 	dummy.close()
 	
 	
-	corefResolution.corefRes("../data/articles/title/*.txt", "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "title") 
-	csv_reader = csv.DictReader(open('train.csv','r'))
+	corefResolution.corefRes("../data/articles/title/*.txt", "/home/prerit/ai/project/stanford-corenlp-full-2015-12-09", "title") 
+	csv_reader = csv.DictReader(open('../data/train.csv','r'))
 	entities_in_article_title = {}
 	for row in csv_reader:
 		if row["articleId"] not in entities_in_article_title.keys():
@@ -38,7 +38,7 @@ def generate_entity_features():
 			entities_in_article_title[row["articleId"]][row["who"]] = [row["num_occur_text"], row["num_occur_title"], row["distribution"], row["entity_type"]] 
 	#print (entities_in_article_title)
 	
-	dummy = open("train.csv","w")
+	dummy = open("../data/train.csv","w")
 	dummy.close()
 	
 	

@@ -80,6 +80,7 @@ def getWhat(whoAll,parseTree):
 					#print(a_who,who)
 					if a_who.find(who) > 0:
 						who = a_who
+				#print("whoNsemi",who,semiFinal)		
 				who_n_what.append((who,semiFinal))	
 					#p = p[i:]
 			#else:
