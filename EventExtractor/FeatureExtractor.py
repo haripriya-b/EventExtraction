@@ -13,8 +13,8 @@ and their distribution.
 
  
 '''
-def generate_entity_features():
-	corefResolution.corefRes("../data/articles/text/*.txt", "/home/prerit/ai/project/stanford-corenlp-full-2015-12-09", "text")
+def generate_entity_features(articles):
+	corefResolution.corefRes("../data/articles/text/*.txt", "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "text")
 	csv_reader = csv.DictReader(open('../data/train.csv','r'))
 	entities_in_article_text = {}
 	for row in csv_reader:
@@ -27,8 +27,32 @@ def generate_entity_features():
 	dummy = open("../data/train.csv","w")
 	dummy.close()
 	
+	for articleID in entities_in_article_text.keys():
+		id = int(articleID)
+		entities_in_title = []
+		entities_in_title_words = []
+		title = articles[id].title
+		words_in_title = articles[id].title.split(' ')
+		#for word in words_in_title:
+		#	word = word.strip()
+		
+		for entity in entities_in_article_text[articleID].keys():
+			new_entity = entity.strip()
+			if title.lower().find(new_entity.lower()):
+				entities_in_title.append(new_entity)
+				entities_in_title_words = entities_in_title_words + new_entity.split(' ')
+				
+		for i in range(1,len(words_in_title)):
+			if words_in_title[i] not in entities_in_title_words:
+				words_in_title[i] = words_in_title[i].lower()
+		
+		print(articles[id].title)				
+		articles[id].title = ' '.join(words_in_title)
+		print("Title:   ", articles[id].title)
 	
-	corefResolution.corefRes("../data/articles/title/*.txt", "/home/prerit/ai/project/stanford-corenlp-full-2015-12-09", "title") 
+	articles = corefResolution.create_title_input(articles)
+	
+	corefResolution.corefRes("../data/articles/title/*.txt", "/home/haripriya/AI/eventExtraction/stanford-corenlp-full-2015-12-09", "title") 
 	csv_reader = csv.DictReader(open('../data/train.csv','r'))
 	entities_in_article_title = {}
 	for row in csv_reader:

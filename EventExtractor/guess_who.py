@@ -37,13 +37,13 @@ def getWho(inputFile, entities_in_article):
             ans = gnb_classifier.predict(feature)
             prob_ans= gnb_classifier.predict_proba(feature)
             
-            #print(who,ans[0])
-            #print("probability")
-            #print(who,prob_ans[0][1])
+          #  print(who,ans[0])
+           # print("probability")
+          #  print(who,prob_ans[0][1])
             if ans[0]== float(1):
                 whoList.append((who,prob_ans[0][1]))
     whoList = sorted(whoList, key = lambda x:x[1],reverse  = True)
-    #print(whoList) 
+    print("Who List: ", whoList) 
     return whoList  
 
 #getWho("../data/test.txt")

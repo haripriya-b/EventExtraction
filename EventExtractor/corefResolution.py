@@ -16,6 +16,7 @@ details for each article and returns an Article object:
 4. text
 Splits the title and text into lists of sentences and add them to the Article object. 
 '''
+
 def getArticle(fileName):
     line = fileName.readline()
     if line != '':
@@ -67,8 +68,8 @@ For each article in the input file, creates a file ../data/articles/title/{artic
 title of the article into that file.
 
 '''
-def create_title_input(inputFile):
-    articles = create_text_input(inputFile)
+def create_title_input(articles):
+    #articles = create_text_input(inputFile)
     for articleId in articles.keys():
         with open("../data/articles/title/" + str(articles[articleId].articleId) + ".txt", "w") as articleFile:
             articleFile.write(articles[articleId].title)
@@ -90,8 +91,6 @@ def create_title_input(inputFile):
                          * distribution: ((sum(index of occurrence of the entity))/(number of occurrences of that entity))/(number of word tokens)
 
 The cort co-reference resolution is run on all the .txt files in the specified folder (title/text).
-
-
 '''
 def corefRes(inputFilesPath, core_nlp_path, part_of_article):
 
