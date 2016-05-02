@@ -3,6 +3,7 @@ import numpy
 import corefResolution
 import csv
 from FeatureExtractor import generate_entity_features
+from guess_organization import getOrganization
 
 def getWho(inputFile, entities_in_article):
     file = open("../data/my_who_classifier.pkl", "rb")
@@ -43,8 +44,14 @@ def getWho(inputFile, entities_in_article):
             if ans[0]== float(1):
                 whoList.append((who,prob_ans[0][1]))
     whoList = sorted(whoList, key = lambda x:x[1],reverse  = True)
-    print("Who List: ", whoList) 
-    return whoList  
+    whos = []
+    for (ent, prb) in whoList:
+        whos.append(ent.strip())
+    if len(whos) == 0:
+        org = getOrganization(entities_in_article)
+        whos.append(org.strip())
+    print("Who List: ", whos) 
+    return whos  
 
 #getWho("../data/test.txt")
                       

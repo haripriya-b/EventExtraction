@@ -134,30 +134,53 @@ def getWhat(who,tree):
 	who=who.strip()
 	print(who)
 	a+=1
-	print(tree)
+	#print(tree)
 	leaf_values = tree.leaves()
 	what = ""
-	
+	finalWhat = ""
 	if who in leaf_values:
 		leaf_index = leaf_values.index(who)
 		tree_location = tree.leaf_treeposition(leaf_index)
-		print("hwer",tree[tree_location[:-1]].label())
+		#print("hwer",tree[tree_location[:-1]].label())
 		#tree_location = (0,3,0)
 		tree_location=tree_location[:-1]
-		#tree.draw()
+		print ("tree for:", who)
+		tree.draw()
 		nounList = ['NN','NNP','NNS','NP']
 		temp=tree_location
 		while tree[tree_location].label() in nounList :
 			temp = tree_location
 			tree_location = tree_location[:-1]
-		print("here",tree[tree_location].label())
+			
+			if tree[tree_location].label() == 'NP':
+				if tree[tree_location].right_sibling() is not None and tree[tree_location].right_sibling().label() == "VP":
+					what = tree[tree_location].right_sibling().leaves()
+					finalWhat = (finalWhat + ' ' + ' '.join(what)).strip()
+					print(' '.join(what))
+			
+				elif tree[tree_location].right_sibling() is not None and tree[tree_location].right_sibling().leaves()[0] == ',' and tree[tree_location].right_sibling().right_sibling().label() == "VP":
+					what = tree[tree_location].right_sibling().right_sibling().leaves()
+					finalWhat = (finalWhat + ', ' + ' '.join(what)).strip()
+					
+				elif tree[tree_location].right_sibling() is not None and tree[tree_location].right_sibling().label() == 'NP-TMP' and tree[tree_location].right_sibling().right_sibling().label() == "VP":
+					what = tree[tree_location].right_sibling().right_sibling().leaves()
+					finalWhat = (finalWhat + ', ' + ' '.join(what)).strip()
+				
+	return finalWhat		
+			
+		#print("here",tree[tree_location].label())
 		#tree_location = tree_location[:-1]
-		tree_location = temp
+		#tree_location = temp
+'''
 		if tree[tree_location].right_sibling() is not None and tree[tree_location].right_sibling().label() == "VP":
 			what = tree[tree_location].right_sibling().leaves()
 			print(' '.join(what))
+			
+		elif tree[tree_location].right_sibling() is not None and tree[tree_location].right_sibling().leaves()[0] == ',' and tree[tree_location].right_sibling().right_sibling().label() == "VP":
+			what = tree[tree_location].right_sibling().right_sibling().leaves()
+	
 	return ' '.join(what)
-
+'''
 	
 	
 '''	
@@ -197,9 +220,12 @@ def get_who_and_what(whoAll):
 			#print("tree in get who and what", tree," who",who[0])
 			for who in whoAll: 
 				for part_who in who.split():
+					#print("who going in:", who)
+					#print("Part who going in:", part_who)
 					what = getWhat(part_who, tree)
+					#print("what coming out:", what)
 					if what != "": return (who, what)
-					#tree.draw()
+					tree.draw()
 		 
 	if what == "":
 		with open("../data/articles/text/parseTrees.dat","r") as textFile:
@@ -211,12 +237,15 @@ def get_who_and_what(whoAll):
 					for part_who in who.split():
 						if sent.find(part_who):
 							tree = ParentedTree.fromstring(textTree[sent])
+							#print("b. who going in:", who)
+							#print("b. Part who going in:", part_who)
 							what = getWhat(part_who, tree)
+							#print("what coming out:", what)
 							#tree.draw()
 							if what != "":
 								return (who,what)
 
-	return (who[0], "")			 
+	return (whoAll[0], "")			 
 	
 '''
 	#print("tree", textTree)

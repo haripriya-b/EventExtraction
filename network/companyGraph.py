@@ -79,6 +79,10 @@ def addEvents(events):
 events = []
 createNetwork()
 link = """http://feedproxy.google.com/~r/TechCrunch/Zynga/~3/KxqBxfQKC10/"""
+link1 = """http://feedproxy.google.com/~r/TechCrunch/Zynga/~3/bB_4k26LpBI/"""
 event = Event(1, "Mark Pincus", 'joined as CEO', 'Mountain View', 'today', '', 'Zynga', 'Sun 12 Apr 2015', link)
+event1 = Event(2, "Regina E. Dugan", "joins zynga 's board of directors", '', '', '', 'Zynga', 'Sun 12 Apr 2015', link1)
+
 events.append(event)
+events.append(event1)
 addEvents(events)

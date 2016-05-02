@@ -14,11 +14,9 @@ def Extractor(inputFile):
 	
     articles = corefResolution.create_text_input(inputFile)
     entities_in_article = generate_entity_features(articles)
-    who_and_prob = getWho(inputFile, entities_in_article)
-    print(who_and_prob)
-    who = []
-    for (ent, prb) in who_and_prob:
-        who.append(ent)
+    who = getWho(inputFile, entities_in_article)
+    #print(who_and_prob)
+    
     if len(who) >0:
      	who_n_what = get_who_and_what(who)
     else:
@@ -28,7 +26,7 @@ def Extractor(inputFile):
     print("when: ",when)
     where = getWhere(inputFile, entities_in_article)
     organization = getOrganization(entities_in_article)
-    print(organization)
+    print('Organization: ', organization)
     print('where: ', where)
     for articleID in articles.keys():
     	publicationDate = articles[articleID].date
@@ -43,7 +41,7 @@ def formTree():
 	def tree_create():
 	    sentence = """“Mark Pincus steps down as CEO of Zynga"""
 	    sentence1 = treebank.parsed_sents('wsj_0001.mrg')[1]
-	    print(type(sentence1))
+	    #print(type(sentence1))
 	    sent3 = """ [ParentedTree('ROOT', [ParentedTree('FRAG', [ParentedTree('X', [ParentedTree('NP', [ParentedTree('NP', [ParentedTree('NNP', ['Zynga'])]), ParentedTree('NP', [ParentedTree('NNS', ['names'])])]), ParentedTree('NP', [ParentedTree('NNP', ['David']), ParentedTree('NNP', ['Lee'])]), ParentedTree('NP', [ParentedTree('NP', [ParentedTree('NN', ['cfo'])]), ParentedTree(',', [',']), ParentedTree('PP', [ParentedTree('IN', ['as']), ParentedTree('NP', [ParentedTree('JJ', ['longtime']), ParentedTree('NN', ['exec']), ParentedTree('NNP', ['Mark']), ParentedTree('NNP', ['Vranesh'])])])])]), ParentedTree('VP', [ParentedTree('VBZ', ['departs']), ParentedTree('NP', [ParentedTree('DT', ['The']), ParentedTree('NN', ['firm'])])])])])] """
 	    sentence1 = """(ROOT
   (NP
